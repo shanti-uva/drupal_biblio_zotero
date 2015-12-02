@@ -24,7 +24,7 @@ function biblio_zotero_node_info() {
  * Add featured custom display type
  */
 function biblio_zotero_entity_info_alter(&$entity_info) {
-  $entity_info['biblio']['view modes']['featured'] = array(
+  $entity_info['node']['view modes']['featured'] = array(
     'label' => t('Featured'),
     'custom settings' => TRUE,
   );
