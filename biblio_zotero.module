@@ -1,6 +1,37 @@
 <?php
 
 /**
+ * Implementation of hook_menu().
+ * Adds paths for kmap fields to use with Solr Indexing
+ */
+ function biblio_zotero_menu_alter() {
+    return array(
+        'shanti_biblio/node_ajax/%' => array(
+            'page callback' => 'biblio_zotero_node_ajax',
+            'page arguments' => array(2),
+            'type' => MENU_CALLBACK,
+            'access callback' => 'user_access', 
+            'access arguments' => array('access content'),
+        ),
+        'shanti_biblio/node_embed/%' => array(
+            'page callback' => 'biblio_zotero_node_embed',
+            'page arguments' => array(2),
+            'type' => MENU_CALLBACK,
+            'access callback' => 'user_access', 
+            'access arguments' => array('access content'),
+        ),
+        'shanti_biblio/node_json/%' => array(
+            'page callback' => 'biblio_zotero_node_json',
+            'page arguments' => array(2),
+            'type' => MENU_CALLBACK,
+            'access arguments' => array('access content'),    
+        )
+    );
+}
+ 
+ // TODO: Need to implement the menu callbacks above for Kmap Fields
+ 
+/**
 * Implementation of hook_node_info().
 */
 function biblio_zotero_node_info() {
@@ -19,7 +50,7 @@ function biblio_zotero_node_info() {
       );
    return $items;
 }
-
+ 
 /**
  * Add featured custom display type
  */
