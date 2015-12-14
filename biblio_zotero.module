@@ -4,32 +4,61 @@
  * Implementation of hook_menu().
  * Adds paths for kmap fields to use with Solr Indexing
  */
- function biblio_zotero_menu_alter() {
-    return array(
-        'shanti_biblio/node_ajax/%' => array(
+ function biblio_zotero_menu() {
+    $items = array(
+        'shanti-biblio/node-ajax/%' => array(   
             'page callback' => 'biblio_zotero_node_ajax',
             'page arguments' => array(2),
             'type' => MENU_CALLBACK,
-            'access callback' => 'user_access', 
-            'access arguments' => array('access content'),
+            'access callback' => TRUE,
+            /*'access callback' => 'user_access', 
+            'access arguments' => array('access content'),*/
         ),
-        'shanti_biblio/node_embed/%' => array(
+        'shanti-biblio/node-embed/%' => array(
             'page callback' => 'biblio_zotero_node_embed',
             'page arguments' => array(2),
             'type' => MENU_CALLBACK,
             'access callback' => 'user_access', 
             'access arguments' => array('access content'),
         ),
-        'shanti_biblio/node_json/%' => array(
+        'shanti-biblio/node-json/%' => array(
             'page callback' => 'biblio_zotero_node_json',
             'page arguments' => array(2),
             'type' => MENU_CALLBACK,
             'access arguments' => array('access content'),    
         )
     );
+    return $items;
 }
  
- // TODO: Need to implement the menu callbacks above for Kmap Fields
+/**
+ * Returns html for node's div without drupal wrappings for embedding via ajax
+ */
+ function biblio_zotero_node_ajax($nid) {
+     $node = node_load($nid);
+     $build = node_view($node,'full');
+     print drupal_render($build);
+}
+ 
+/**
+ * Returns full html with custom css that turns off headers, footers, and search flyout for IFrame embedding
+ */
+ function biblio_zotero_node_embed($nid) {
+     $css_path = drupal_get_path('module', 'biblio_zotero') . '/css/biblio_zotero_embed.css';
+     $res = drupal_add_css($css_path);
+     $node = node_load($nid);
+     $build = node_view($node,'full');
+     return drupal_render($build);
+}
+ 
+ 
+/**
+ * Returns json version of node
+ */
+ function biblio_zotero_node_json($nid) {
+     $node = node_load($nid);
+     drupal_json_output($node);
+}
  
 /**
 * Implementation of hook_node_info().
@@ -55,10 +84,15 @@ function biblio_zotero_node_info() {
  * Add featured custom display type
  */
 function biblio_zotero_entity_info_alter(&$entity_info) {
-  $entity_info['node']['view modes']['featured'] = array(
-    'label' => t('Featured'),
-    'custom settings' => TRUE,
-  );
+      $entity_info['node']['view modes']['featured'] = array(
+        'label' => t('Featured'),
+        'custom settings' => TRUE,
+      );
+  
+    $entity_info['node']['view modes']['embed'] = array(
+        'label' => t('Embedded'),
+        'custom settings' => TRUE,
+    );
 }
 
 /**

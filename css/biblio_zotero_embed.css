@@ -1,0 +1,14 @@
+
+header.header-banner, header.banner, 
+#search-flyout, .flap, div.ext_wrapper, .back-to-top, 
+#menu.main-menu, #admin-menu,
+.region-page-bottom, #admin-footer,
+footer.footer {
+    display: none !important;
+}
+
+@media screen and (min-width: 768px) {
+    html body.html.admin-menu {
+        margin-top: 0rem !important;
+    }
+}
